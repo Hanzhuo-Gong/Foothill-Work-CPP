@@ -1,0 +1,238 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+using namespace std;
+
+int main()
+{
+   string userstr;
+   int yogurtQuan, totalStamp, freeYogurt, creditDeduct;
+   int negativeNum, outRange;
+   char psChoice;
+
+   //Identified the variable
+   negativeNum = 0;
+   outRange = 100;
+   
+   //Initialized the number
+   totalStamp = 0;
+   yogurtQuan = 0;
+   freeYogurt = 10;
+   creditDeduct = 10;
+
+   //Set up loop, and give user the options
+   while (true) {
+      cout << "Menu: "
+           << "\n P (process purchase)"
+           << "\n S (Shut down)" << endl
+           << "\nYour Choice: ";
+
+      //User Input
+      getline(cin, userstr);
+      psChoice = userstr[0];
+
+      //Error message if the user enter other than p and s
+      if (psChoice != 'p' && psChoice != 'P'&& 
+          psChoice != 's' && psChoice != 'S') {
+         cout << "\n**** use P or S, please. ****"
+              << "\n" << endl;
+         continue;
+      }
+
+      //Shut down the system if user input s
+      if (psChoice == 's' || psChoice == 'S') {
+         cout << "\nSystem has been shut down, bye " << endl;
+         return 0;
+      }
+
+      //To see if customer qualified for free yogurt
+      //before the purchase
+      if (totalStamp >= freeYogurt) {
+         cout << "\nYou qualify for a free yogurt. Would "
+              << "you like to use your credits? "
+              << "(Y or N)" << endl;
+         getline(cin, userstr);
+         psChoice = userstr[0];
+
+         //if the customer accept the free yogurt
+         if (psChoice == 'y' || psChoice == 'Y') {
+            totalStamp -= creditDeduct;
+            cout << "You have just used " << creditDeduct
+                 << " credit, and have " << totalStamp << " left"
+                 << "\nEnjoy your yogurt." << "\n" << endl;
+         }
+         //if customer declince free yogurt, back to purchase
+         else if (psChoice == 'n' || psChoice == 'N') {
+            cout << "\nHow many yogurts would you like to buy? ";
+            getline(cin, userstr);
+            istringstream istream = istringstream(userstr);
+            istream >> yogurtQuan;
+
+            //If the number is valid
+            if (yogurtQuan > negativeNum && yogurtQuan < outRange
+               && !istream.fail()) {
+               totalStamp += yogurtQuan;
+               cout << "\nyou just earned " << yogurtQuan
+                    << " stamps and have a total of "
+                    << totalStamp << " to use." << "\n" << endl;
+            }
+            
+            //if the number is invalid
+            else {
+               cout << "The number is invalid" << "\n" << endl;
+            }
+         }
+         
+         //Error Message if user enter other than Y and N
+         else
+            cout << "****Use Y or N only, Please****"
+                 << "\n" << endl;
+      }
+      
+      //Purchase System 
+      if (psChoice == 'p' || psChoice == 'P') {
+         cout << "\nHow many yogurts would you like to buy? ";
+         getline(cin, userstr);
+         istringstream(userstr) >> yogurtQuan;
+         
+         //If the number is valid
+         if (yogurtQuan > negativeNum && yogurtQuan < outRange) {
+            totalStamp += yogurtQuan;
+            cout << "\nyou just earned " << yogurtQuan
+                 << " stamps and have a total of "
+                 << totalStamp << " to use." << "\n" << endl;
+         }
+         
+         //If the number is invalid
+         else {
+            cout << "The number is invalid" << "\n" << endl;
+         }
+      }
+   }
+}
+
+/*------------------------output 1-------------------------
+Menu:
+P (process purchase)
+S (Shut down)
+
+Your Choice: Hi
+
+**** use P or S, please. ****
+
+Menu:
+P (process purchase)
+S (Shut down)
+
+Your Choice: P
+
+How many yogurts would you like to buy? 5
+
+you just earned 5 stamps and have a total of 5 to use.
+
+Menu:
+P (process purchase)
+S (Shut down)
+
+Your Choice: purchase
+
+How many yogurts would you like to buy? 6
+
+you just earned 6 stamps and have a total of 11 to use.
+
+Menu:
+P (process purchase)
+S (Shut down)
+
+Your Choice: P
+
+You qualify for a free yogurt. Would you like to use your credits? (Y or N)
+n
+
+How many yogurts would you like to buy? four
+The number is invalid
+
+Menu:
+P (process purchase)
+S (Shut down)
+
+Your Choice: P
+
+You qualify for a free yogurt. Would you like to use your credits? (Y or N)
+y
+You have just used 10 credit, and have 1 left
+Enjoy your yogurt.
+
+Menu:
+P (process purchase)
+S (Shut down)
+
+Your Choice: s
+
+System has been shut down, bye
+Press any key to continue . . .
+---------------------------------------------------------*/
+
+/*-----------------------------output 2-------------------
+Menu:
+P (process purchase)
+S (Shut down)
+
+Your Choice: Project
+
+How many yogurts would you like to buy? -30
+The number is invalid
+
+Menu:
+P (process purchase)
+S (Shut down)
+
+Your Choice: P
+
+How many yogurts would you like to buy? 103
+The number is invalid
+
+Menu:
+P (process purchase)
+S (Shut down)
+
+Your Choice: p
+
+How many yogurts would you like to buy? 14
+
+you just earned 14 stamps and have a total of 14 to use.
+
+Menu:
+P (process purchase)
+S (Shut down)
+
+Your Choice: p
+
+You qualify for a free yogurt. Would you like to use your credits? (Y or N)
+n
+
+How many yogurts would you like to buy? 213
+The number is invalid
+
+Menu:
+P (process purchase)
+S (Shut down)
+
+Your Choice: P
+
+You qualify for a free yogurt. Would you like to use your credits? (Y or N)
+N
+
+How many yogurts would you like to buy? 2
+
+you just earned 2 stamps and have a total of 16 to use.
+
+Menu:
+P (process purchase)
+S (Shut down)
+
+Your Choice: Shut
+
+System has been shut down, bye
+Press any key to continue . . .
+----------------------------------------------------------*/
