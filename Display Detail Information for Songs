@@ -1,0 +1,288 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+using namespace std;
+
+//Class prototye
+class ITunes {
+private:
+   string name, artist;
+   int bitrate, totalTime;
+
+public:
+   static const int MIN_BITRATE = 64;
+   static const int MAX_BITRATE = 705;
+   static const int MIN_STR_LENGTH = 1;
+   static const int MAX_STR_LENGTH = 80;
+   static const int MIN_PLAY_TIME = 1000;
+   static const int MAX_PLAY_TIME = 1000 * 60 * 60;
+   static const int DEFAULT_BITRATE = 64;
+   static const int DEFAULT_PLAY_TIME = 1000;
+   static const string DEFAULT_STRING;
+
+   //constructor
+   ITunes();
+   ITunes(string name, string artist, int bitrate, int totalTime);
+
+   //accessor
+   string getName();
+   string getArtist();
+   int getBitrate();
+   int getTotalTime();
+
+   //mutator
+   bool setName(string songName);
+   bool setArtist(string songArtist);
+   bool setBitrate(int songBitrate);
+   bool setTotalTime(int songTotalTime);
+
+   //Serialization
+   string toString();
+   void display();
+   void setDefaults();
+};
+
+//constants for class
+const string ITunes::DEFAULT_STRING = "(undefined)";
+
+int main() {
+   //The assign number in parameter 3 & 4 are the number
+   //of bit rate and total time in milliseconds for the song.
+   ITunes firstSong, secondSong;
+   ITunes thirdSong("Shape of You", "Ed Sheeran", 320, 255000);
+   ITunes fourthSong("Attentio", "CharliePuth", 700, 232000);
+
+   //First display
+   cout << "-------------Before-------------" << endl;
+   firstSong.display();
+   secondSong.display();
+   thirdSong.display();
+   fourthSong.display();
+
+   //Second display with mutation
+   firstSong.setName("Hello World!");
+
+   secondSong.setName("Shake It Off");
+   secondSong.setArtist("Taylor Swift");
+   secondSong.setBitrate(512);
+   secondSong.setTotalTime(242000);
+
+   thirdSong.setArtist("Professor Anand");
+
+   fourthSong.setName("Dark House");
+   fourthSong.setArtist("Katy Perry");
+   fourthSong.setTotalTime(225000);
+
+   cout << "----After changing the mutators----" << endl;
+   firstSong.display();
+   secondSong.display();
+   thirdSong.display();
+   fourthSong.display();
+
+   //Test for accessors
+   cout << "--------Test for accessor-------" << endl;
+   cout << firstSong.getName() << endl;
+   cout << thirdSong.getArtist() << endl;
+   cout << fourthSong.getBitrate() << "\n" << endl;
+
+   //Reset to all default
+   firstSong.setDefaults();
+   secondSong.setDefaults();
+   thirdSong.setDefaults();
+   fourthSong.setDefaults();
+
+   cout << "---------Last display----------- " << endl;
+   firstSong.display();
+   secondSong.display();
+   thirdSong.display();
+   fourthSong.display();
+
+   //Mutator filter
+   //The number in setBitrate() is assigned to test for mutator.
+   cout << "-----------Test for Mutator----------" << endl;
+   if (!firstSong.setName(""))
+      cout << "Sorry, invalid name for setName()." << endl;
+   else
+      cout << "Valid name for setName()." << endl;
+   if (!thirdSong.setBitrate(2500))
+      cout << "Sorry, invalid bit rate for setBirate()" << endl;
+   else
+      cout << "Valid bit rate for setBirate()." << endl;
+   if (!fourthSong.setArtist("Cool Name"))
+      cout << "Sorry, invalid name for setArtist()." << endl;
+   else
+      cout << "Valid artist name for setArtist()." << endl;
+
+}
+
+//default constructor
+ITunes::ITunes() {
+   setDefaults();
+}
+
+//constructor with four parameter
+ITunes::ITunes(string name, string artist,
+   int bitrate, int totalTime) {
+   if (!setName(name))
+      this->name = DEFAULT_STRING;
+   if (!setArtist(artist))
+      this->artist = DEFAULT_STRING;
+   if (!setBitrate(bitrate))
+      this->bitrate = DEFAULT_BITRATE;
+   if (!setTotalTime(totalTime))
+      this->totalTime = DEFAULT_PLAY_TIME;
+}
+
+//Mutator
+bool ITunes::setName(string songName) {
+   if (songName.length() < MIN_STR_LENGTH ||
+      songName.length() > MAX_STR_LENGTH)
+      return false;
+   name = songName;
+   return true;
+}
+
+bool ITunes::setArtist(string songArtist) {
+   if (songArtist.length() < MIN_STR_LENGTH ||
+      songArtist.length() > MAX_STR_LENGTH)
+      return false;
+   artist = songArtist;
+   return true;
+}
+
+bool ITunes::setBitrate(int songBitrate) {
+   if (songBitrate < MIN_BITRATE || songBitrate > MAX_BITRATE)
+      return false;
+   bitrate = songBitrate;
+   return true;
+}
+
+bool ITunes::setTotalTime(int songTotalTime) {
+   if (songTotalTime < MIN_PLAY_TIME ||
+      songTotalTime > MAX_PLAY_TIME)
+      return false;
+   totalTime = songTotalTime;
+   return true;
+}
+
+//Accessor
+string ITunes::getName() {
+   return name;
+}
+
+string ITunes::getArtist() {
+   return artist;
+}
+
+int ITunes::getBitrate() {
+   return bitrate;
+}
+
+int ITunes::getTotalTime() {
+   return totalTime;
+}
+
+//Serialization
+string ITunes::toString() {
+   string allString;
+   int convertSec, convertMin, second;
+   convertSec = 1000;
+   convertMin = 60000;
+   second = 60;
+
+   allString = "Title: " + name + "\nArtist: " + artist +
+      "\nBit Rate: " + std::to_string(bitrate) + "k " +
+      "\nPlaying time: " + std::to_string(totalTime / convertMin) +
+      " minutes and " + std::to_string((totalTime / convertSec) % second)
+      + " seconds";
+   return allString;
+}
+
+//Display method
+void ITunes::display() {
+   cout << toString() << "\n" << endl;
+}
+
+//Set default
+void ITunes::setDefaults() {
+   name = DEFAULT_STRING;
+   artist = DEFAULT_STRING;
+   bitrate = DEFAULT_BITRATE;
+   totalTime = DEFAULT_PLAY_TIME;
+}
+
+/*------------------Output------------------
+-------------Before-------------
+Title: (undefined)
+Artist: (undefined)
+Bit Rate: 64k
+Playing time: 0 minutes and 1 seconds
+
+Title: (undefined)
+Artist: (undefined)
+Bit Rate: 64k
+Playing time: 0 minutes and 1 seconds
+
+Title: Shape of You
+Artist: Ed Sheeran
+Bit Rate: 320k
+Playing time: 4 minutes and 15 seconds
+
+Title: Attentio
+Artist: CharliePuth
+Bit Rate: 700k
+Playing time: 3 minutes and 52 seconds
+
+----After changing the mutators----
+Title: Hello World!
+Artist: (undefined)
+Bit Rate: 64k
+Playing time: 0 minutes and 1 seconds
+
+Title: Shake It Off
+Artist: Taylor Swift
+Bit Rate: 512k
+Playing time: 4 minutes and 2 seconds
+
+Title: Shape of You
+Artist: Professor Anand
+Bit Rate: 320k
+Playing time: 4 minutes and 15 seconds
+
+Title: Dark House
+Artist: Katy Perry
+Bit Rate: 700k
+Playing time: 3 minutes and 45 seconds
+
+--------Test for accessor-------
+Hello World!
+Professor Anand
+700
+
+---------Last display-----------
+Title: (undefined)
+Artist: (undefined)
+Bit Rate: 64k
+Playing time: 0 minutes and 1 seconds
+
+Title: (undefined)
+Artist: (undefined)
+Bit Rate: 64k
+Playing time: 0 minutes and 1 seconds
+
+Title: (undefined)
+Artist: (undefined)
+Bit Rate: 64k
+Playing time: 0 minutes and 1 seconds
+
+Title: (undefined)
+Artist: (undefined)
+Bit Rate: 64k
+Playing time: 0 minutes and 1 seconds
+
+-----------Test for Mutator----------
+Sorry, invalid name for setName().
+Sorry, invalid bit rate for setBirate()
+Valid artist name for setArtist().
+Press any key to continue . . .
+*/
