@@ -1,0 +1,50 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+
+   int studID = xxxxxxxx;           //personal ID, need to hidde
+   int numLet = 4;
+
+   cout << "My last(family) name is Gong"
+        << "\nMy student ID is " << studID
+        << "\nThe number of characters in my last name is " << numLet << endl;
+   
+   
+   // Value for studID % 2
+   int intResult;
+       intResult= studID % 2;
+       cout << "\nThe value of EXPRESSION #1 is " << intResult << endl;
+   
+   // Value for studID % numLet
+       intResult = studID % numLet;
+       cout << "The value of EXPRESSION #2 is " << intResult << endl;
+
+   // Value for studID/numLet
+   double doubleResult;
+          doubleResult = studID / numLet;
+          cout << "The value of EXPRESSION #3 is " << doubleResult << endl;
+   
+   // Value for 1+2+...+numLet
+       intResult = 1 + 2 + 3 + 4;
+       cout << "The value of EXPRESSION #4 is " << intResult << endl;
+
+   // Value for 100000/[(99+(studID-54321)/(numLet+30)^2]
+       doubleResult = 100000.00 / (99 + ((studID - 54321) / ((numLet + 30)*(numLet + 30))));
+       cout << "The value of EXPRESSION #5 is " << doubleResult << endl;
+   return 0;
+
+}
+
+/*---------------Output----------------------
+My last(family) name is Gong
+My student ID is xxxxxxxx
+The number of characters in my last name is 4
+
+The value of EXPRESSION #1 is 1
+The value of EXPRESSION #2 is 3
+The value of EXPRESSION #3 is 5.08478e+06
+The value of EXPRESSION #4 is 10
+The value of EXPRESSION #5 is 5.66701
+Press any key to continue . . .
+----------------------------------------------*/
