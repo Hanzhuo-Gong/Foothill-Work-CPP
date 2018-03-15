@@ -1,0 +1,191 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+using namespace std;
+
+//Set up function
+char getKeyLetter();
+string getString();
+string maskLetter(string theString, char keyLetter);
+string removeLetter(string theString, char keyLetter);
+int countKey(string theString, char keyLetter);
+
+int main()
+{
+   char keyLetter;
+   string theString, resultMask, resultStr;
+   int resultCount;
+
+   //Call function
+   keyLetter = getKeyLetter();
+   theString = getString();
+   resultStr = maskLetter(theString, keyLetter);
+   cout << "\nString with '" << keyLetter << "' masked:\n"
+        << resultStr << endl;
+   resultCount = countKey(theString, keyLetter);
+   cout << "\n# as " << resultCount << endl;
+   resultStr = removeLetter(theString, keyLetter);
+   cout << "\nString with '" << keyLetter << "' removed:\n"
+        << resultStr << endl;
+   return 0;
+}
+
+//Function for get key letter
+char getKeyLetter() {
+
+   //Declare variables & values
+   string userInput;
+   char keyLetter;
+   int charLength;
+
+   const int CHAR_MAXIMUM = 1;
+
+   //Set up the loop
+   while (true) {
+      cout << "Please enter a SINGLE letter to act as key:";
+      getline(cin, userInput);
+      keyLetter = userInput[0];
+      charLength = userInput.length();
+
+      //Check if the length & letter is valid
+      if (charLength == CHAR_MAXIMUM &&
+         ((keyLetter >= 'a' && keyLetter <= 'z') ||
+         (keyLetter >= 'A' && keyLetter <= 'Z'))) {
+         break;
+      }
+      else
+         continue;
+   }
+   return keyLetter;
+}
+
+//Funtion for get string
+string getString() {
+
+   //Declare variables & values
+   string userInput, theString;
+   int strLength;
+
+   const int STR_MINIMUM = 4;
+
+   //Set up the loop
+   while (true) {
+      cout << "Please enter a phrase or sentence >= "
+           << STR_MINIMUM << " letters:" << endl;
+      getline(cin, userInput);
+      theString = userInput;
+      strLength = userInput.length();
+
+      //Check if the string is valid
+      if (strLength >= STR_MINIMUM)
+         break;
+      else
+         continue;
+   }
+   return theString;
+}
+
+//Function to replace the key letter with "-"
+string maskLetter(string theString, char keyLetter) {
+   int i;
+   string resultStr = "";
+
+   for (i = 0; i < theString.length(); i++) {
+      if (theString.at(i) == keyLetter)
+         resultStr += "-";
+      else
+         resultStr += theString.at(i);
+   }
+   return resultStr;
+}
+
+//Function to remove the key letter
+string removeLetter(string theString, char keyLetter) {
+   int i;
+   string resultStr = "";
+
+   for (i = 0; i < theString.length(); i++) {
+      if (theString.at(i) != keyLetter)
+         resultStr += theString.at(i);
+   }
+   return resultStr;
+}
+
+//Function to count the key letter
+int countKey(string theString, char keyLetter) {
+   int i, totalCount;
+   totalCount = 0;
+
+   for (i = 0; i < theString.length(); i++) {
+      if (theString.at(i) == keyLetter)
+         totalCount += 1;
+   }
+   return totalCount;
+}
+
+/*------------------output1-------------------
+Please enter a SINGLE letter to act as key:s
+Please enter a phrase or sentence >= 4 letters:
+CS is the most interesting class
+
+String with 's' masked:
+CS i- the mo-t intere-ting cla--
+
+# as 5
+
+String with 's' removed:
+CS i the mot intereting cla
+Press any key to continue . . .
+---------------------------------------------*/
+
+/*----------------output2(error)---------------
+Please enter a SINGLE letter to act as key:1
+Please enter a SINGLE letter to act as key:ASD
+Please enter a SINGLE letter to act as key:cf
+Please enter a SINGLE letter to act as key:A
+Please enter a phrase or sentence >= 4 letters:
+123
+Please enter a phrase or sentence >= 4 letters:
+gjf
+Please enter a phrase or sentence >= 4 letters:
+I WANT TO GET A FOR ALL MY CLASSES!
+
+String with 'A' masked:
+I W-NT TO GET - FOR -LL MY CL-SSES!
+
+# as 4
+
+String with 'A' removed:
+I WNT TO GET  FOR LL MY CLSSES!
+Press any key to continue . . .
+----------------------------------------------*/
+
+/*------------------output3-------------------
+Please enter a SINGLE letter to act as key:c
+Please enter a phrase or sentence >= 4 letters:
+Get into Google is my career target in the future
+
+String with 'c' masked:
+Get into Google is my -areer target in the future
+
+# as 1
+
+String with 'c' removed:
+Get into Google is my areer target in the future
+Press any key to continue . . .
+----------------------------------------------*/
+
+/*------------------output4-------------------
+Please enter a SINGLE letter to act as key:I
+Please enter a phrase or sentence >= 4 letters:
+IT is NEVER too late! FIGHT ON!
+
+String with 'I' masked:
+-T is NEVER too late! F-GHT ON!
+
+# as 2
+
+String with 'I' removed:
+T is NEVER too late! FGHT ON!
+Press any key to continue . . .
+---------------------------------------------*/
