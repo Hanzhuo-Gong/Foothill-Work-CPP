@@ -1,0 +1,308 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+using namespace std;
+
+int main()
+{
+   //food #1 constants
+   const string Food_1_NAME = "Apple";
+   const int Food_1_CALORIES_P100G = 52;
+   const double Food_1_PROTEIN_P100G = 0.24;
+   const double Food_1_FAT_P100G = 0.16;
+   const double Food_1_FIBER_P100G = 2.4;
+   const double Food_1_SUGAR_P100G = 10.4;
+
+   //food #2 constants
+   const string Food_2_NAME = "Spinach";
+   const int Food_2_CALORIES_P100G = 23;
+   const double Food_2_PROTEIN_P100G = 2.94;
+   const double Food_2_FAT_P100G = 0.28;
+   const double Food_2_FIBER_P100G = 2.39;
+   const double Food_2_SUGAR_P100G = 0.44;
+
+   //food #3 constants
+   const string Food_3_NAME = "Egg";
+   const int Food_3_CALORIES_P100G = 48;
+   const double Food_3_PROTEIN_P100G = 10.91;
+   const double Food_3_FAT_P100G = 0.16;
+   const double Food_3_FIBER_P100G = 0.;
+   const double Food_3_SUGAR_P100G = 0.70;
+
+   //food #4 constants
+   const string Food_4_NAME = "White Rice";
+   const int Food_4_CALORIES_P100G = 97;
+   const double Food_4_PROTEIN_P100G = 2.01;
+   const double Food_4_FAT_P100G = 0.17;
+   const double Food_4_FIBER_P100G = 0.98;
+   const double Food_4_SUGAR_P100G = 0.06;
+
+   //food #5 constants
+   const string Food_5_NAME = "Broccoli";
+   const int Food_5_CALORIES_P100G = 34;
+   const double Food_5_PROTEIN_P100G = 2.86;
+   const double Food_5_FAT_P100G = 0.33;
+   const double Food_5_FIBER_P100G = 2.64;
+   const double Food_5_SUGAR_P100G = 1.65;
+
+   string recipeName, userInputstr, serPersonstr;
+   int userInputint, serPersonint;
+   double totalCal, totalPro, totalFat, totalFib, totalSur;
+
+   //initialize accumular variable
+   totalCal = 0;
+   totalPro = 0.;
+   totalFat = 0.;
+   totalFib = 0.;
+   totalSur = 0.;
+
+   //print menu
+   cout << "--------List of Possible Ingredients--------" << endl;
+   cout << "Food #1: " << Food_1_NAME << endl;
+   cout << "Food #2: " << Food_2_NAME << endl;
+   cout << "Food #3: " << Food_3_NAME << endl;
+   cout << "Food #4: " << Food_4_NAME << endl;
+   cout << "Food #5: " << Food_5_NAME << endl;
+
+   //name of recipt
+   cout << "What do you want to call for this recipe? ";
+   getline(cin, recipeName);
+
+   //How many people for the food serving
+   cout << "Number of servings? ";
+   getline(cin, serPersonstr);
+   istringstream(serPersonstr) >> serPersonint;
+
+   //Determine if serPersonint is a valid number
+   if (serPersonint > 10 || serPersonint < 1)
+   {
+      cout << "The number " << serPersonint << " is a invalid"
+           << " number for the number of serving" << endl;
+      return 1;
+   }
+
+   //Food #1--------------------------------------------------
+   cout << "\nHow many grams of " << Food_1_NAME << "? ";
+   getline(cin, userInputstr);
+   istringstream(userInputstr) >> userInputint;
+
+   //Determine if userInputint is a valid number
+   if (userInputint > 1000 || userInputint < 0)
+   {
+      cout << "The number " << userInputint
+           << " is a invalid number for grams." << endl;
+      return 1;
+   }
+   
+   //update the accumulations
+   totalCal += userInputint*(Food_1_CALORIES_P100G / 100.);
+   totalPro += userInputint*(Food_1_PROTEIN_P100G / 100.);
+   totalFat += userInputint*(Food_1_FAT_P100G / 100.);
+   totalFib += userInputint*(Food_1_FIBER_P100G / 100.);
+   totalSur += userInputint*(Food_1_SUGAR_P100G / 100.);
+
+   //Food #2--------------------------------------------------
+   cout << "How many grams of " << Food_2_NAME << "? ";
+   getline(cin, userInputstr);
+   istringstream(userInputstr) >> userInputint;
+
+   //Determine if userInputint is a valid number grams
+   if (userInputint > 1000 || userInputint < 0)
+   {
+      cout << "The number " << userInputint
+           << " is a invalid number for grams." << endl;
+      return 1;
+   }
+   
+   //update the accumulations
+   totalCal += userInputint*(Food_2_CALORIES_P100G / 100.);
+   totalPro += userInputint*(Food_2_PROTEIN_P100G / 100.);
+   totalFat += userInputint*(Food_2_FAT_P100G / 100.);
+   totalFib += userInputint*(Food_2_FIBER_P100G / 100.);
+   totalSur += userInputint*(Food_2_SUGAR_P100G / 100.);
+
+   //Food #3--------------------------------------------------
+   cout << "How many grams of " << Food_3_NAME << "? ";
+   getline(cin, userInputstr);
+   istringstream(userInputstr) >> userInputint;
+
+   //Determine if userInputint is a valid number grams
+   if (userInputint > 1000 || userInputint < 0)
+   {
+      cout << "The number " << userInputint
+           << " is a invalid number for grams." << endl;
+      return 1;
+   }
+   
+   //update the accumulations
+   totalCal += userInputint*(Food_3_CALORIES_P100G / 100.);
+   totalPro += userInputint*(Food_3_PROTEIN_P100G / 100.);
+   totalFat += userInputint*(Food_3_FAT_P100G / 100.);
+   totalFib += userInputint*(Food_3_FIBER_P100G / 100.);
+   totalSur += userInputint*(Food_3_SUGAR_P100G / 100.);
+
+   //Food #4--------------------------------------------------
+   cout << "How many grams of " << Food_4_NAME << "? ";
+   getline(cin, userInputstr);
+   istringstream(userInputstr) >> userInputint;
+
+   //Determine if userInputint is a valid number for grams
+   if (userInputint > 1000 || userInputint < 0)
+   {
+      cout << "The number " << userInputint
+           << " is a invalid number for grams." << endl;
+      return 1;
+   }
+   
+   //update the accumulations
+   totalCal += userInputint*(Food_4_CALORIES_P100G / 100.);
+   totalPro += userInputint*(Food_4_PROTEIN_P100G / 100.);
+   totalFat += userInputint*(Food_4_FAT_P100G / 100.);
+   totalFib += userInputint*(Food_4_FIBER_P100G / 100.);
+   totalSur += userInputint*(Food_4_SUGAR_P100G / 100.);
+
+   //Food #5--------------------------------------------------
+   cout << "How many grams of " << Food_5_NAME << "? ";
+   getline(cin, userInputstr);
+   istringstream(userInputstr) >> userInputint;
+
+   //Determine if userInputint is a valid number for grams
+   if (userInputint > 1000 || userInputint < 0)
+   {
+      cout << "The number " << userInputint
+           << " is a invalid number for grams." << endl;
+      return 1;
+   }
+   
+   //update the accumulations
+   totalCal += userInputint*(Food_5_CALORIES_P100G / 100.);
+   totalPro += userInputint*(Food_5_PROTEIN_P100G / 100.);
+   totalFat += userInputint*(Food_5_FAT_P100G / 100.);
+   totalFib += userInputint*(Food_5_FIBER_P100G / 100.);
+   totalSur += userInputint*(Food_5_SUGAR_P100G / 100.);
+
+   //report result--------------------------------------------
+   cout << "\nNutrition value per serving for " << recipeName 
+        << " is -------" << endl;
+   cout << " Calories: " << totalCal / serPersonint << endl;
+   cout << " Protein: " << totalPro / serPersonint << endl;
+   cout << " Fat: " << totalFat / serPersonint << endl;
+   cout << " Fiber: " << totalFib / serPersonint << endl;
+   cout << " Sugar: " << totalSur / serPersonint << endl;
+   return 0;
+}
+
+/*---------------output 1-----------------------
+--------List of Possible Ingredients--------
+Food #1: Apple
+Food #2: Spinach
+Food #3: Egg
+Food #4: White Rice
+Food #5: Broccoli
+What do you want to call for this recipe? Han's Recipe
+Number of servings? 8
+
+How many grams of Apple? 540
+How many grams of Spinach? 230
+How many grams of Egg? 940
+How many grams of White Rice? 503
+How many grams of Broccoli? 740
+
+Nutrition value per serving for Han's Recipe is -------
+Calories: 190.551
+Protein: 17.7358
+Fat: 0.788638
+Fiber: 5.3653
+Sugar: 9.53298
+Press any key to continue . . .
+
+---------------output 2(error)------------------
+--------List of Possible Ingredients--------
+Food #1: Apple
+Food #2: Spinach
+Food #3: Egg
+Food #4: White Rice
+Food #5: Broccoli
+What do you want to call for this recipe? Nutrition Menu
+Number of servings? 4
+
+How many grams of Apple? 503
+How many grams of Spinach? 820
+How many grams of Egg? 301
+How many grams of White Rice? 8000
+The number 8000 is a invalid number for grams.
+Press any key to continue . . .
+
+---------------output 3-------------------------
+--------List of Possible Ingredients--------
+Food #1: Apple
+Food #2: Spinach
+Food #3: Egg
+Food #4: White Rice
+Food #5: Broccoli
+What do you want to call for this recipe? Healthy Food
+Number of servings? 5
+
+How many grams of Apple? 256
+How many grams of Spinach? 821
+How many grams of Egg? 35
+How many grams of White Rice? 421
+How many grams of Broccoli? 867
+
+Nutrition value per serving for Healthy Food is -------
+Calories: 208.38
+Protein: 12.3657
+Fat: 1.26824
+Fiber: 10.5561
+Sugar: 9.0079
+Press any key to continue . . .
+
+---------------output 4-------------------------
+--------List of Possible Ingredients--------
+Food #1: Apple
+Food #2: Spinach
+Food #3: Egg
+Food #4: White Rice
+Food #5: Broccoli
+What do you want to call for this recipe? Family Dinner
+Number of servings? 9
+
+How many grams of Apple? 620
+How many grams of Spinach? 820
+How many grams of Egg? 783
+How many grams of White Rice? 904
+How many grams of Broccoli? 587
+
+Nutrition value per serving for Family Dinner is -------
+Calories: 218.144
+Protein: 16.22
+Fat: 0.890522
+Fiber: 6.53711
+Sugar: 9.31077
+Press any key to continue . . .
+
+---------------output 5-------------------------
+--------List of Possible Ingredients--------
+Food #1: Apple
+Food #2: Spinach
+Food #3: Egg
+Food #4: White Rice
+Food #5: Broccoli
+What do you want to call for this recipe? Healthy Party
+Number of servings? 2
+
+How many grams of Apple? 18
+How many grams of Spinach? 327
+How many grams of Egg? 218
+How many grams of White Rice? 89
+How many grams of Broccoli? 0
+
+Nutrition value per serving for Healthy Party is -------
+Calories: 137.77
+Protein: 17.6148
+Fat: 0.72225
+Fiber: 4.55975
+Sugar: 2.4451
+Press any key to continue . . .
+
+-----------------------------------------------*/
