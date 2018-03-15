@@ -1,0 +1,339 @@
+//Lab 1 code
+//This card and hand class make a card play
+//Copyright © 2018 Hanzhuo Gong. All right reserved.
+
+#include <iostream>
+#include <string>
+#include <sstream>
+using namespace std;
+
+//-------Card class prototype-----------
+class Card {
+public:
+   //define for the suit
+   enum Suit { Clubs, Diamonds, Hearts, Spades };
+
+private:
+   char value;
+   Suit suit;
+   bool errorFlag;
+
+   //constant value
+public:
+   static const string VALID_VALUE;
+   static const char DEFAULT_VALUE;
+   static const Suit DEFAULT_SUIT;
+
+public:
+   //constructor and toString
+   Card(char value = DEFAULT_VALUE, Suit suit = DEFAULT_SUIT);
+   string toString();
+
+   //Accessor and mutators
+   bool setCard(char value, Suit suit);
+   char getValue() { return value; }
+   Suit getSuit() { return suit; }
+   bool getErrorFlag() { return errorFlag; }
+
+   //check equals method
+   bool equals(Card card);
+
+private:
+   //private methods
+   static bool isValid(char value, Suit suit);
+};
+
+//Default Value
+const char Card::DEFAULT_VALUE = 'A';
+const Card::Suit Card::DEFAULT_SUIT = Suit::Spades;
+
+//---------Hand Class Prototype--------
+class Hand {
+
+public:
+   static const int MAX_CARDS = 50;
+
+private:
+   Card myCards[MAX_CARDS];
+   int numCards;
+public:
+   //constructor
+   Hand();
+
+   //methods
+   void resetHand();
+   bool takeCard(Card card);
+   Card playCard();
+   string toString();
+   int getNumCards() { return numCards; }
+   Card inspectCard(int k);
+};
+
+const string Card::VALID_VALUE = "A23456789TJQK";
+
+int main()
+{
+   Card card1('l', Card::Diamonds), card2('T', Card::Clubs),
+      card3('k', Card::Hearts);
+   cout << card1.toString() << "\n" << card2.toString() << "\n"
+      << card3.toString() << endl;
+
+   //change the value of objects
+   card1.setCard('8', Card::Hearts);
+   card2.setCard('d', Card::Diamonds);
+   card3.setCard('a', Card::Clubs);
+   cout << "\nAfter changing all cards: " << endl;
+   cout << card1.toString() << "\n" << card2.toString() << "\n"
+      << card3.toString() << endl;
+
+   //test the equal method
+   cout << "\nTest the card 1 and card 2 if they are equal: " << endl;
+   cout << (card1.equals(card2) ? "True" : "False") << endl;
+   card1.setCard('7', Card::Spades);
+   card2.setCard('7', Card::Spades);
+   cout << "\nAfter changing card 1 and card 2 to the same value: " << endl;
+   cout << (card1.equals(card2) ? "True" : "False") << endl;
+
+   //Hand Class
+   Card card_1('6', Card::Spades), card_2('Q', Card::Diamonds),
+      card_3('4', Card::Clubs), card_4('J', Card::Hearts);
+
+   //Before taking card, reset our hand to empty
+   Hand hand;
+   cout << "\nBefore collecting cards, there's no card in the hand"
+      << "\nHand = " << hand.toString() << endl;
+
+   //collecting cards
+   while (hand.getNumCards() < hand.MAX_CARDS) {
+      hand.takeCard(card_1);
+      hand.takeCard(card_2);
+      hand.takeCard(card_3);
+      hand.takeCard(card_4);
+   }
+   cout << "\nHand full" << "\nAfter deal" << "\nHand = "
+      << hand.toString() << endl;
+
+   //Test for inspect card
+   cout << "\nTesting inspectCard()\n" + hand.inspectCard(3).toString();
+   cout << "\n" + hand.inspectCard(57).toString() << endl;
+   cout << hand.inspectCard(-30).toString() + "\n" << endl;
+
+   //play all the cards
+   while (hand.getNumCards() > 0) {
+      cout << "Playing: ";
+      hand.playCard();
+   }
+
+   //check the hand is empty
+   cout << "\nAfter playing all cards" << "\nHand = "
+      << hand.toString() << endl;
+   return 0;
+}
+//-------------Card Class Definition-----------
+
+//constructor
+Card::Card(char value, Suit suit) {
+   if (!setCard(value, suit)) {
+      this->value = 'A';
+      this->suit = Spades;
+   }
+}
+
+//display for the string
+string Card::toString() {
+   string output;
+   const int valueLength = 2;
+   char strVal[valueLength];
+
+   //convert char to CString
+   strVal[0] = value;
+   strVal[1] = '\0';
+
+   //convert CString to s-c string
+   output = string(strVal);
+
+   if (errorFlag)
+      output = "[Invalid Card]";
+   else if (suit == Spades)
+      output += " of Spades";
+   else if (suit == Clubs)
+      output += " of Clubs";
+   else if (suit == Diamonds)
+      output += " of Diamonds";
+   else if (suit == Hearts)
+      output += " of Hearts";
+   return output;
+}
+
+//mutator
+bool Card::setCard(char value, Suit suit) {
+   //convert lowcase to uppercase
+   value = toupper((int)value);
+
+   errorFlag = !isValid(value, suit);
+
+   if (!errorFlag) {
+      this->value = value;
+      this->suit = suit;
+   }
+   return !errorFlag;
+}
+
+//method to check if the value is valid
+bool Card::isValid(char value, Suit suit) {
+   if (string::npos == VALID_VALUE.find(value))
+      return false;
+   return true;
+}
+
+//check to see if all fields are equal
+bool Card::equals(Card card) { 
+   if (this->value == card.value && this->suit == card.suit)
+      return true;
+   return false;
+}
+
+//------------Hand Class Definition----------
+
+//constructor
+Hand::Hand() {
+   resetHand();
+}
+
+//remove all cards method
+void Hand::resetHand() {
+   numCards = 0;
+}
+
+//take card untile the hand is full
+bool Hand::takeCard(Card card) {
+
+   if (!(numCards < MAX_CARDS))
+      return false;
+   if (card.getErrorFlag())
+      return true;
+   myCards[numCards] = card;
+   numCards++;
+   return true;
+}
+
+//remove card from the array
+Card Hand::playCard() {
+   Card playCard('m', Card::Spades);
+
+   if (numCards > 0) {
+      playCard = myCards[numCards - 1];
+      cout << playCard.toString() << endl;
+      numCards--;
+   }
+   return playCard;
+}
+
+//display method
+string Hand::toString() {
+   string output;
+   int index;
+
+   output = "(";
+   for (index = 0; index < numCards; index++) {
+      if (index == 0)
+         output += myCards[0].toString();
+      else
+         output += ", " + myCards[index].toString();
+   }
+   output += ")";
+   return output;
+}
+
+//inspect card, if bad value, erroflag equal true
+Card Hand::inspectCard(int k) {
+   Card errorCard('0', Card::Spades);
+
+   if (k >= 0 && k < numCards)
+      return myCards[k];
+   return errorCard;
+}
+
+/*---------------output------------------
+[Invalid Card]
+T of Clubs
+K of Hearts
+
+After changing all cards:
+8 of Hearts
+[Invalid Card]
+A of Clubs
+
+Test the card 1 and card 2 if they are equal:
+False
+
+After changing card 1 and card 2 to the same value:
+True
+
+Before collecting cards, there's no card in the hand
+Hand = ()
+
+Hand full
+After deal
+Hand = (6 of Spades, Q of Diamonds, 4 of Clubs, J of Hearts, 6 of Spades, Q of Diamonds, 4 of Clubs, J of Hearts, 6 of Spades, Q of Diamonds, 4 of Clubs, J of Hearts, 6 of Spades, Q of Diamonds, 4 of Clubs, J of Hearts, 6 of Spades, Q of Diamonds, 4 of Clubs, J of Hearts, 6 of Spades, Q of Diamonds, 4 of Clubs, J of Hearts, 6 of Spades, Q of Diamonds, 4 of Clubs, J of Hearts, 6 of Spades, Q of Diamonds, 4 of Clubs, J of Hearts, 6 of Spades, Q of Diamonds, 4 of Clubs, J of Hearts, 6 of Spades, Q of Diamonds, 4 of Clubs, J of Hearts, 6 of Spades, Q of Diamonds, 4 of Clubs, J of Hearts, 6 of Spades, Q of Diamonds, 4 of Clubs, J of Hearts, 6 of Spades, Q of Diamonds)
+
+Testing inspectCard()
+J of Hearts
+[Invalid Card]
+[Invalid Card]
+
+Playing: Q of Diamonds
+Playing: 6 of Spades
+Playing: J of Hearts
+Playing: 4 of Clubs
+Playing: Q of Diamonds
+Playing: 6 of Spades
+Playing: J of Hearts
+Playing: 4 of Clubs
+Playing: Q of Diamonds
+Playing: 6 of Spades
+Playing: J of Hearts
+Playing: 4 of Clubs
+Playing: Q of Diamonds
+Playing: 6 of Spades
+Playing: J of Hearts
+Playing: 4 of Clubs
+Playing: Q of Diamonds
+Playing: 6 of Spades
+Playing: J of Hearts
+Playing: 4 of Clubs
+Playing: Q of Diamonds
+Playing: 6 of Spades
+Playing: J of Hearts
+Playing: 4 of Clubs
+Playing: Q of Diamonds
+Playing: 6 of Spades
+Playing: J of Hearts
+Playing: 4 of Clubs
+Playing: Q of Diamonds
+Playing: 6 of Spades
+Playing: J of Hearts
+Playing: 4 of Clubs
+Playing: Q of Diamonds
+Playing: 6 of Spades
+Playing: J of Hearts
+Playing: 4 of Clubs
+Playing: Q of Diamonds
+Playing: 6 of Spades
+Playing: J of Hearts
+Playing: 4 of Clubs
+Playing: Q of Diamonds
+Playing: 6 of Spades
+Playing: J of Hearts
+Playing: 4 of Clubs
+Playing: Q of Diamonds
+Playing: 6 of Spades
+Playing: J of Hearts
+Playing: 4 of Clubs
+Playing: Q of Diamonds
+Playing: 6 of Spades
+
+After playing all cards
+Hand = ()
+Press any key to continue . . .
+*/
