@@ -1,0 +1,296 @@
+#include <iostream>
+#include <string>
+#include <cmath>
+using namespace std;
+
+//Class prototype
+class DateProfile {
+private:
+   char gender, searchGender;
+   int finance, romance;
+   string name;
+public:
+   //constants
+   static const int MIN_ROMANCE_FINANCE = 0;
+   static const int MAX_ROMANCE_FINANCE = 10;
+   static const int MIN_NAME_LEN = 0;
+   static const int MAX_NAME_LEN = 30;
+   static const int MAX_DIFFERENCE_RANGE = 10;
+   static const int COMPUTE_AVERAGE = 2;
+   static const char DEFAULT_GENDER;
+   static const char DEFAULT_SEARCH;
+   static const int DEFAULT_ROMANCE = 0;
+   static const int DEFAULT_FINANCE = 0;
+   static const string DEFAULT_NAME;
+
+private:
+   //Function for test validation
+   static bool validChar(char testChar);
+   static bool validNumber(int testNum);
+   static bool validName(string testName);
+
+   //Private member Functions
+   double determineGenderFit(DateProfile partner);
+   double determineRomanceFit(DateProfile partner);
+   double determineFinanceFit(DateProfile partner);
+
+public:
+   //void method
+   void setDefaults();
+   void setAll(char gender, char searchGender, int romance,
+      int finance, string name);
+
+   //constructor
+   DateProfile();
+   DateProfile(char gender, char searchGender, int romance,
+      int finance, string name);
+
+   //accessor
+   char getGender() const { return gender; }
+   char getSearchGender() const { return searchGender; }
+   int getFinance() const { return finance; }
+   int getRomance() const { return romance; }
+   string getName() const { return name; }
+
+   //mutator
+   bool setGender(char applicantGender);
+   bool setSearchGender(char appSeachGender);
+   bool setRomance(int applicantRomance);
+   bool setFinance(int applicantFinance);
+   bool setName(string applicantName);
+
+   //public member function
+   double fitValue(DateProfile partner);
+};
+
+//constants and global scope
+const char DateProfile::DEFAULT_GENDER = ' ';
+const char DateProfile::DEFAULT_SEARCH = ' ';
+const string DateProfile::DEFAULT_NAME = "undefined name";
+void displayTwoProfile(DateProfile profile1, DateProfile profile2);
+
+int main()
+{
+   //number in parameter 3 & 4 are indicate the important
+   //romance & finance value to the applicant
+   DateProfile applicant1('M', 'F', 8, 6, "John Adam");
+   DateProfile applicant2('F', 'M', 4, 9, "Kelly White");
+   DateProfile applicant3('M', 'F', 9, 10, "David Brown");
+   DateProfile applicant4('F', 'M', 7, 4, "Jenny Smite");
+
+   displayTwoProfile(applicant1, applicant1);
+   displayTwoProfile(applicant1, applicant2);
+   displayTwoProfile(applicant1, applicant3);
+   displayTwoProfile(applicant1, applicant4);
+
+   cout << "\n";
+   displayTwoProfile(applicant2, applicant1);
+   displayTwoProfile(applicant2, applicant2);
+   displayTwoProfile(applicant2, applicant3);
+   displayTwoProfile(applicant2, applicant4);
+
+   cout << "\n";
+   displayTwoProfile(applicant3, applicant1);
+   displayTwoProfile(applicant3, applicant2);
+   displayTwoProfile(applicant3, applicant3);
+   displayTwoProfile(applicant3, applicant4);
+
+   cout << "\n";
+   displayTwoProfile(applicant4, applicant1);
+   displayTwoProfile(applicant4, applicant2);
+   displayTwoProfile(applicant4, applicant3);
+   displayTwoProfile(applicant4, applicant4);
+
+   //Test for mutator filter
+   cout << "-----------Test for mutators---------" << endl;
+   if (!applicant2.setFinance(-3))
+      cout << "Sorry, invalid finance." << endl;
+   else
+      cout << "Valid finance to set up" << endl;
+   if (!applicant3.setName("Henry B Garcia"))
+      cout << "Sorry, invalid name." << endl;
+   else
+      cout << "Valid name to set up" << endl;
+   if (!applicant1.setSearchGender('W'))
+      cout << "Sorry, invalid gender for searching." << endl;
+   else
+      cout << "Valid gender for searching." << endl;
+   if (!applicant4.setGender('A'))
+      cout << "Sorry, invalid gender." << endl;
+   else
+      cout << "Valid gender to set up" << endl;
+   return 0;
+}
+
+void DateProfile::setDefaults() {
+   gender = DEFAULT_GENDER;
+   searchGender = DEFAULT_SEARCH;
+   finance = DEFAULT_FINANCE;
+   romance = DEFAULT_ROMANCE;
+   name = DEFAULT_NAME;
+}
+
+void DateProfile::setAll(char gender, char searchGender,
+   int romance, int finance, string name) {
+   if (!setGender(gender))
+      this->gender = DEFAULT_GENDER;
+   if (!setSearchGender(searchGender))
+      this->searchGender = DEFAULT_SEARCH;
+   if (!setRomance(romance))
+      this->romance = DEFAULT_ROMANCE;
+   if (!setFinance(finance))
+      this->finance = DEFAULT_FINANCE;
+   if (!setName(name))
+      this->name = DEFAULT_NAME;
+}
+//Default constructor
+DateProfile::DateProfile() {
+   setDefaults();
+}
+
+//Constructor with five parameters
+DateProfile::DateProfile(char gender, char searchGender,
+   int romance, int finance, string name) {
+   setAll(gender, searchGender, romance, finance, name);
+}
+
+//Mutator
+bool DateProfile::setGender(char applicantGender) {
+   if (!validChar(applicantGender))
+      return false;
+   gender = applicantGender;
+   return true;
+}
+
+bool DateProfile::setSearchGender(char appSearchGender) {
+   if (!validChar(appSearchGender))
+      return false;
+   searchGender = appSearchGender;
+   return true;
+}
+
+bool DateProfile::setRomance(int applicantRomance) {
+   if (!validNumber(applicantRomance))
+      return false;
+   romance = applicantRomance;
+   return true;
+}
+
+bool DateProfile::setFinance(int applicantFinance) {
+   if (!validNumber(applicantFinance))
+      return false;
+   finance = applicantFinance;
+   return true;
+}
+
+bool DateProfile::setName(string applicantName) {
+   if (!validName(applicantName))
+      return false;
+   name = applicantName;
+   return true;
+}
+
+//Test for validation
+bool DateProfile::validChar(char testChar) {
+   if (testChar != 'M' && testChar != 'F')
+      return false;
+   return true;
+}
+
+bool DateProfile::validNumber(int testNumber) {
+   if (testNumber < MIN_ROMANCE_FINANCE ||
+      testNumber > MAX_ROMANCE_FINANCE)
+      return false;
+   return true;
+}
+
+bool DateProfile::validName(string testName) {
+   if (testName.length() <= MIN_NAME_LEN ||
+      testName.length() >= MAX_NAME_LEN)
+      return false;
+   return true;
+}
+
+//private and public member functions
+double DateProfile::fitValue(DateProfile partner) {
+   double resultFitValue;
+   if (determineGenderFit(partner) == 0)
+      return 0;
+   resultFitValue = ((determineRomanceFit(partner) +
+      (determineFinanceFit(partner))) / COMPUTE_AVERAGE);
+   return resultFitValue;
+}
+
+double DateProfile::determineGenderFit(DateProfile partner) {
+   int genderResult;
+   genderResult = 0;
+   if (this->getGender() == partner.getSearchGender() &&
+      this->getSearchGender() == partner.getGender())
+      genderResult = 1;
+   return genderResult;
+}
+
+double DateProfile::determineRomanceFit(DateProfile partner) {
+   double resultRomance;
+   resultRomance = 1 - abs(((double)this->getRomance() -
+      partner.getRomance()) / MAX_DIFFERENCE_RANGE);
+   return resultRomance;
+}
+
+double DateProfile::determineFinanceFit(DateProfile partner) {
+   double resultFinance;
+   resultFinance = 1 - abs((double)(this->getFinance() -
+      partner.getFinance()) / MAX_DIFFERENCE_RANGE);
+   return resultFinance;
+}
+
+//Display method
+void displayTwoProfile(DateProfile profile1, DateProfile profile2) {
+   cout << "Fit between " << profile1.getName() << " and "
+      << profile2.getName() << ": " << endl;
+   cout << profile1.fitValue(profile2) << endl;
+}
+
+/*---------------------output---------------------
+Fit between John Adam and John Adam:
+0
+Fit between John Adam and Kelly White:
+0.65
+Fit between John Adam and David Brown:
+0
+Fit between John Adam and Jenny Smite:
+0.85
+
+Fit between Kelly White and John Adam:
+0.65
+Fit between Kelly White and Kelly White:
+0
+Fit between Kelly White and David Brown:
+0.7
+Fit between Kelly White and Jenny Smite:
+0
+
+Fit between David Brown and John Adam:
+0
+Fit between David Brown and Kelly White:
+0.7
+Fit between David Brown and David Brown:
+0
+Fit between David Brown and Jenny Smite:
+0.6
+
+Fit between Jenny Smite and John Adam:
+0.85
+Fit between Jenny Smite and Kelly White:
+0
+Fit between Jenny Smite and David Brown:
+0.6
+Fit between Jenny Smite and Jenny Smite:
+0
+-----------Test for mutators---------
+Sorry, invalid finance.
+Valid name to set up
+Sorry, invalid gender for searching.
+Sorry, invalid gender.
+Press any key to continue . . .
+------------------------------------------------*/
