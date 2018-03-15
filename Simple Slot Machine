@@ -1,0 +1,384 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <ctime>
+using namespace std;
+
+//Class prototype
+class TripleString {
+private:
+   string string1, string2, string3;
+public:
+   static const int MAX_LEN = 20;
+
+   //default constructor
+   TripleString();
+
+   //mutator and accessor
+   bool setString1(string ranString);
+   bool setString2(string ranString);
+   bool setString3(string ranString);
+   bool validString(string str);
+   string getString1();
+   string getString2();
+   string getString3();
+
+};
+
+//Global Scope prototype
+int getBet();
+string randString();
+TripleString pull();
+int getPayMultiplier(TripleString thepull);
+void display(TripleString thePull, int winnings);
+
+//Global constant
+const int QUIT_GAME = 0;
+
+int main() {
+
+   srand((unsigned)time(0L));
+   int Bet, betMultipier, winnings;
+   TripleString thePull;
+
+   while (true) {
+      Bet = getBet();
+      if (Bet == QUIT_GAME) {
+         cout << "See you next time, bye!" << endl;
+         break;
+      }
+      thePull = pull();
+      winnings = Bet*getPayMultiplier(thePull);
+      display(thePull, winnings);
+   }
+   return 0;
+}
+
+//Method of get bet from user
+int getBet() {
+   string userInput;
+   int userInt;
+
+   const int MIN_BET = 1;
+   const int MAX_BET = 50;
+
+   while (true) {
+      cout << "How much would you like to bet (" << MIN_BET << " - "
+         << MAX_BET << ")" << " or " << QUIT_GAME << " to quit? ";
+      getline(cin, userInput);
+      istringstream(userInput) >> userInt;
+
+      if (userInt >= MIN_BET && userInt <= MAX_BET ||
+         userInt == QUIT_GAME) {
+         break;
+      }
+      else
+         continue;
+   }
+   return userInt;
+}
+
+//object for three random string
+TripleString pull() {
+   TripleString thePull;
+   string str1 = randString();
+   string str2 = randString();
+   string str3 = randString();
+   thePull.setString1(str1);
+   thePull.setString2(str2);
+   thePull.setString3(str3);
+   return thePull;
+}
+
+//Method for return a randon string
+string randString() {
+   int randint;
+   string stringName;
+
+   const int RANDMAX_RANGE = 1000;
+   const int BAR_MIN_RANGE = 1;
+   const int BAR_MAX_RANGE = 400;
+   const int CHE_MIN_RANGE = 401;
+   const int CHE_MAX_RANGE = 700;
+   const int SPA_MIN_RANGE = 701;
+   const int SPA_MAX_RANGE = 750;
+
+   randint = rand() % RANDMAX_RANGE;
+
+   if (randint >= BAR_MIN_RANGE && randint <= BAR_MAX_RANGE)
+      stringName = "BAR";
+   else if (randint >= CHE_MIN_RANGE && randint <= CHE_MAX_RANGE)
+      stringName = "cherries";
+   else if (randint >= SPA_MIN_RANGE && randint <= SPA_MAX_RANGE)
+      stringName = "(space)";
+   else
+      stringName = "7";
+   return stringName;
+}
+
+//Multiplier method
+int getPayMultiplier(TripleString thePull) {
+   int resultNum;
+
+   resultNum = 0;
+   const int CHERRIES_BET = 5;
+   const int DOUBLE_CHERRIES_BET = 15;
+   const int TRIPLE_CHERRIES_BET = 30;
+   const int TRIPLE_BAR_BET = 50;
+   const int TRIPLE_SEVEN_BET = 100;
+
+   if (thePull.getString1() == "cherries") {
+      if (thePull.getString2() != "cherries")
+         resultNum = CHERRIES_BET;
+      else if (thePull.getString3() != "cherries")
+         resultNum = DOUBLE_CHERRIES_BET;
+      else
+         resultNum = TRIPLE_CHERRIES_BET;
+   }
+   else if (thePull.getString1() == "BAR" &&
+      thePull.getString2() == "BAR" &&
+      thePull.getString3() == "BAR")
+      resultNum = TRIPLE_BAR_BET;
+   else if (thePull.getString1() == "7" &&
+      thePull.getString2() == "7" &&
+      thePull.getString3() == "7")
+      resultNum = TRIPLE_SEVEN_BET;
+
+   return resultNum;
+}
+
+//display method
+void display(TripleString thePull, int winnings) {
+   string allString = thePull.getString1() + " " +
+      thePull.getString2() + " " + thePull.getString3();
+
+   cout << allString << endl;
+
+   if (winnings > 0)
+      cout << "congrats, you won $" << winnings << "\n" << endl;
+   else
+      cout << "sorry, you lose.\n" << endl;
+}
+
+//default constructor
+TripleString::TripleString() {
+   string1 = "";
+   string2 = "";
+   string3 = "";
+}
+
+//Mutator
+bool TripleString::setString1(string ranString) {
+   if (!validString(ranString))
+      return false;
+
+   string1 = ranString;
+   return true;
+}
+
+bool TripleString::setString2(string ranString) {
+   if (!validString(ranString))
+      return false;
+
+   string2 = ranString;
+   return true;
+}
+
+bool TripleString::setString3(string ranString) {
+   if (!validString(ranString))
+      return false;
+
+   string3 = ranString;
+   return true;
+}
+
+//The private helper method
+bool TripleString::validString(string str) {
+   if (str.length() <= MAX_LEN)
+      return true;
+
+   return false;
+}
+
+//Accessor
+string TripleString::getString1() {
+   return  string1;
+}
+
+string TripleString::getString2() {
+   return string2;
+}
+
+string TripleString::getString3() {
+   return string3;
+}
+
+/*Triple Bar in run 2, and triple cherries in run 34*/
+
+/*------------------Output-------------------
+How much would you like to bet (1 - 50) or 0 to quit? asdaw
+How much would you like to bet (1 - 50) or 0 to quit? 123
+How much would you like to bet (1 - 50) or 0 to quit? 1
+7 BAR BAR
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 2
+BAR BAR BAR
+congrats, you won $100
+
+How much would you like to bet (1 - 50) or 0 to quit? 3
+7 cherries BAR
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 4
+BAR cherries cherries
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 5
+7 7 7
+congrats, you won $500
+
+How much would you like to bet (1 - 50) or 0 to quit? 6
+BAR BAR BAR
+congrats, you won $300
+
+How much would you like to bet (1 - 50) or 0 to quit? 7
+cherries cherries BAR
+congrats, you won $105
+
+How much would you like to bet (1 - 50) or 0 to quit? 8
+cherries cherries BAR
+congrats, you won $120
+
+How much would you like to bet (1 - 50) or 0 to quit? 9
+BAR 7 7
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 10
+7 cherries 7
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 11
+BAR BAR 7
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 12
+7 cherries cherries
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 13
+7 BAR cherries
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 14
+cherries BAR BAR
+congrats, you won $70
+
+How much would you like to bet (1 - 50) or 0 to quit? 15
+(space) cherries BAR
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 16
+(space) cherries 7
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 17
+BAR cherries 7
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 18
+BAR BAR 7
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 19
+7 cherries cherries
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 20
+7 BAR 7
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 21
+BAR cherries cherries
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 22
+BAR 7 cherries
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 23
+(space) cherries BAR
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 24
+BAR BAR cherries
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 25
+cherries BAR BAR
+congrats, you won $125
+
+How much would you like to bet (1 - 50) or 0 to quit? 26
+cherries BAR cherries
+congrats, you won $130
+
+How much would you like to bet (1 - 50) or 0 to quit? 27
+7 BAR 7
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 28
+BAR BAR 7
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 29
+cherries cherries BAR
+congrats, you won $435
+
+How much would you like to bet (1 - 50) or 0 to quit? 30
+cherries BAR BAR
+congrats, you won $150
+
+How much would you like to bet (1 - 50) or 0 to quit? 31
+BAR cherries BAR
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 32
+BAR cherries BAR
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 33
+BAR cherries BAR
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 34
+cherries cherries cherries
+congrats, you won $1020
+
+How much would you like to bet (1 - 50) or 0 to quit? 35
+7 BAR cherries
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 36
+cherries 7 BAR
+congrats, you won $180
+
+How much would you like to bet (1 - 50) or 0 to quit? 37
+cherries BAR cherries
+congrats, you won $185
+
+How much would you like to bet (1 - 50) or 0 to quit? 38
+cherries cherries BAR
+congrats, you won $570
+
+How much would you like to bet (1 - 50) or 0 to quit? 39
+7 7 cherries
+sorry, you lose.
+
+How much would you like to bet (1 - 50) or 0 to quit? 40
+cherries 7 cherries
+congrats, you won $200
+
+How much would you like to bet (1 - 50) or 0 to quit? 0
+See you next time, bye!
+Press any key to continue . . .
+*/
