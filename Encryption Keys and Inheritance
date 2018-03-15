@@ -1,0 +1,505 @@
+#include <iostream>
+#include <string>
+#include <climits>
+#include <cmath>
+#include <sstream>
+#include <ctime>       
+using namespace std;
+
+//------------------Class prototype for internet user-----------------
+class InternetUser
+{
+public:
+   //constant value
+   static const int MIN_NAME_LENGTH = 2;
+   static const int MAX_NAME_LENGTH = 50;
+   static const int MIN_IP_LENGTH = 7;
+   static const int MAX_IP_LENGTH = 15;
+   static const string DEFAULT_NAME;
+   static const string DEFAULT_IP;
+
+private:
+   string name;
+   string ip;
+
+public:
+   InternetUser();
+   InternetUser(string name, string ip);
+   string getName() { return name; }
+   string getIp() { return ip; }
+   bool setName(string userName);
+   bool setIp(string userIp);
+   string toString();
+
+private:
+   bool validName(string name);
+   bool validIp(string ip);
+};
+
+const string InternetUser::DEFAULT_NAME = "undefined name";
+const string InternetUser::DEFAULT_IP = "0.0.0.0";
+
+// ++++++++++++++++++++ helper class for client and these member methods
+
+// IntPair allows public, no filtering; classes that use it will protect it
+class IntPair
+{
+public:
+   long firstInt;
+   long secondInt;
+
+   IntPair() { firstInt = secondInt = 0; }
+   IntPair(long frst, long scnd) { firstInt = frst;  secondInt = scnd; }
+   string toString();
+};
+
+// EncryptionSupport contains only static methods that clients can use 
+// wherever all method names should be fairly descriptive other than 
+// inverseMonN(), which you can take as a black-box
+class EncryptionSupport
+{
+public:
+   static bool isPrime(long x);
+   static long inverseModN(long a, long n);
+   static long getSmallRandomPrime();
+   static long getMedSizedRandomPrime();
+};
+
+//----------------Class prototype of Communicator-----------------
+class Communicator:public InternetUser
+{
+private:
+   IntPair publicKey;
+   IntPair privateKey;
+   long firstPrime;
+   long secondPrime;
+   long n, phi, e, d;
+   static const long MAX_PQ;
+
+public:
+   static const int ERROR_FLAG_NUM = 0;
+
+   Communicator();
+   Communicator(long firstPrime, long secondPrime);
+   Communicator(string name, string ip);
+   Communicator(string name, string ip, long firstPrime, long secondPrime);
+   bool setPrime(long firstPrime, long secondPrime);
+   IntPair getPublicKey() { return publicKey; }
+   IntPair getPrivateKey() { return privateKey; }
+   string toString();
+
+private:
+   bool computeBothEncrKeys();
+
+   //helper function
+   void resetPrivateValue();
+};
+
+const long Communicator::MAX_PQ = sqrt(LONG_MAX);
+
+int main()
+{
+   InternetUser user1("T", "123"), user2("dns", "75.75.75.75");
+
+   cout << "Test with bad value:" << endl;
+   cout << user1.toString();
+   cout << "\nCorrect value:" << endl;
+   cout << user2.toString();
+   user1.setName("bad");
+   user1.setIp("23.40.84.104");
+   cout << "\nAfter changing the value:" << endl;
+   cout << user1.toString();
+
+   //test for accessor and mutators
+   cout << "\nTest for accessor:" << endl;
+   cout << user1.getIp() << endl;
+   cout << user2.getName() << endl;
+
+   cout << "\nTest for mutator:" << endl;
+   if (!user1.setName("Brown"))
+      cout << "invalid name" << endl;
+   else
+      cout << "valid name" << endl;
+   if (!user2.setIp("333"))
+      cout << "invalid ip" << endl;
+   else
+      cout << "valid ip" << endl;
+
+   cout << "\n--------------test for communicator-----------------" << endl;
+   srand((unsigned)time(NULL));
+   Communicator test1,test2("Hanzhuo", "231.40.32.80"), test3(809, 821),
+      test4("Hanzhuo", "210.89.10.90", 907, 1087), test5("I", "-300", -3, 2);
+   cout << "\nTest1 is:" << endl;
+   cout << test1.toString();                  
+   cout << "\nTest2 is:" << endl;
+   cout << test2.toString();
+   cout << "\nTest3 is:" << endl;
+   cout << test3.toString();
+   cout << "\nTest4 is:" << endl;
+   cout << test4.toString();
+   cout << "\nTest5 is:" << endl;
+   cout << test5.toString();
+
+  //changing the value
+   test1.setName("Foothill");
+   test1.setIp("19.30.104.203");
+   test1.setPrime(601, 613);
+   cout << "\nAfter changing the value:" << endl;
+   cout << test1.toString();
+}
+
+//----------------------internet user class definitions------------------
+//constructor
+InternetUser::InternetUser()
+{
+   this->name = DEFAULT_NAME;
+   this->ip = DEFAULT_IP;
+}
+InternetUser::InternetUser(string name, string ip) 
+{
+   if (!setName(name))
+      this->name = DEFAULT_NAME;
+   if (!setIp(ip))
+      this->ip = DEFAULT_IP;
+}
+
+//mutators
+bool InternetUser::setName(string userName)
+{
+   if (!validName(userName))
+      return false;
+   name = userName;
+   return true;
+}
+
+bool InternetUser::setIp(string userIp) 
+{
+   if (!validIp(userIp))
+      return false;
+   ip = userIp;
+   return true;
+}
+
+//check for validation
+bool InternetUser::validName(string name)
+{
+   if (name.length() < MIN_NAME_LENGTH ||
+      name.length() > MAX_NAME_LENGTH)
+      return false;
+   return true;
+}
+
+bool InternetUser::validIp(string ip)
+{
+   if (ip.length() < MIN_IP_LENGTH ||
+      ip.length() > MAX_IP_LENGTH)
+      return false;
+   return true;
+}
+
+//formating string
+string InternetUser::toString() 
+{
+   string displayString;
+
+   displayString = "Name: " + name + "\nIP Address: " + ip + "\n";
+   return displayString;
+}
+
+// helper  class IntPair method definitions -----------------------------
+string IntPair::toString()
+{
+   ostringstream cnvrt1, cnvrt2;
+   string retString;
+
+   cnvrt1 << firstInt;
+   cnvrt2 << secondInt;
+
+   retString = "(" + cnvrt1.str() + ", " + cnvrt2.str() + ")";
+
+   return retString;
+}
+
+// helper class EncryptionSupport method definitions --------------------
+bool EncryptionSupport::isPrime(long x)
+{
+   long k, loopLim;
+
+   if (x < 2)
+      return false;
+   if (x < 4)
+      return true;
+   if (x % 2 == 0 || x % 3 == 0)
+      return false;
+
+   // now use the fact the all primes of form 6k +/- 1
+   loopLim = (long)sqrt(x);
+   for (k = 5; k <= loopLim; k += 6)
+   {
+      if (x % k == 0 || x % (k + 2) == 0)
+         return false;
+   }
+   return true;
+}
+
+long EncryptionSupport::getSmallRandomPrime()
+{
+   int index;
+   long lowPrimes[] =
+   {
+      19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67,
+      71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113,
+      127, 131, 137, 139, 149, 151, 157, 163, 167, 173,
+      179, 181, 191, 193, 197, 199, 211, 223, 227, 229,
+      233, 239, 241, 251, 257, 263, 269, 271, 277, 281,
+      283, 293, 307, 311, 313, 317, 331, 337, 347, 349,
+      353, 359, 367, 373, 379, 383, 389, 397, 401, 409,
+      419, 421, 431, 433, 439, 443, 449, 457, 461, 463,
+      467, 479, 487, 491, 499, 503, 509, 521, 523, 541
+   };
+   short arraySize = sizeof(lowPrimes) / sizeof(lowPrimes[0]);
+
+   // pick prime in the above array bet 0 and arraySize - 1
+   index = (int)(rand() % (arraySize - 1));
+
+   return lowPrimes[index];
+}
+
+long EncryptionSupport::getMedSizedRandomPrime()
+{
+   int index;
+   long medPrimes[] =
+   {
+      541, 547, 557, 563, 569, 571, 577, 587, 593, 599, 601, 607,
+      613, 617, 619, 631, 641, 643, 647, 653, 659, 661, 673, 677,
+      683, 691, 701, 709, 719, 727, 733, 739, 743, 751, 757, 761,
+      769, 773, 787, 797, 809, 811, 821, 823, 827, 829, 839, 853,
+      857, 859, 863, 877, 881, 883, 887, 907, 911, 919, 929, 937,
+      941, 947, 953, 967, 971, 977, 983, 991, 997, 1009, 1013, 1019,
+      1021, 1031, 1033, 1039, 1049, 1051, 1061, 1063, 1069, 1087,
+      1091, 1093, 1097, 1103, 1109, 1117, 1123, 1129, 1151, 1153,
+      1163, 1171, 1181, 1187, 1193, 1201, 1213, 1217, 1223,
+   };
+   short arraySize = sizeof(medPrimes) / sizeof(medPrimes[0]);
+
+   // pick prime in the above array bet 0 and arraySize - 1
+   index = (int)(rand() % (arraySize - 1));
+
+   return medPrimes[index];
+}
+
+long EncryptionSupport::inverseModN(long a, long n)
+{
+   // uses extended euclidean algorithm giving as + nt = gcd(n, a), 
+   // with gcd(n, a) = 1,  and s, t discovered.  s = 1/a, and t ignored
+
+   long s, t, r, sPrev, tPrev, rPrev, temp, q, inverse;
+
+   // special key encryption conditions;  we will pick some prime e >= 3 for a
+   if (a < 3 || a >= n || !isPrime(a))
+      return 0;  // error
+
+                 // we are now guaranteed 3 <= a < n and gcd(a, n) = 1;
+
+                 // initialize working variables
+   s = 0;         t = 1;         r = n;
+   sPrev = 1;    tPrev = 0;    rPrev = a;
+
+   while (r != 0)
+   {
+      q = rPrev / r;
+
+      temp = r;
+      r = rPrev - q * r;
+      rPrev = temp;
+
+      temp = s;
+      s = sPrev - q * s;
+      sPrev = temp;
+
+      temp = t;
+      t = tPrev - q * t;
+      tPrev = temp;
+   }
+
+   inverse = sPrev % n;
+   if (inverse < 0)
+      inverse += n;
+   return inverse;
+}
+
+//----------------------Communicator definition--------------------------
+//default constructor
+Communicator::Communicator():InternetUser()
+{
+   resetPrivateValue();
+}
+
+//constructor with first prime and second prime
+Communicator::Communicator(long firstPrime, long secondPrime)
+   :InternetUser()
+{
+   if (!setPrime(firstPrime, secondPrime))
+   {
+      resetPrivateValue();
+   }
+}
+
+//constructor with name and ip from base class
+Communicator::Communicator(string name, string ip): InternetUser(name, ip)
+{
+   resetPrivateValue();
+}
+
+//constructor with all four parameters
+Communicator::Communicator(string name, string ip, long firstPrime,
+   long secondPrime) : InternetUser(name, ip)
+{
+   if (!setPrime(firstPrime, secondPrime))
+   {
+      resetPrivateValue();
+   }
+}
+
+//reset all the private value
+void Communicator::resetPrivateValue()
+{
+   this->firstPrime = ERROR_FLAG_NUM;
+   this->secondPrime = ERROR_FLAG_NUM;
+   this->n = ERROR_FLAG_NUM;
+   this->d = ERROR_FLAG_NUM;
+   this->e = ERROR_FLAG_NUM;
+   this->phi = ERROR_FLAG_NUM;
+}
+
+//mutator for first prime and second prime
+bool Communicator::setPrime(long firstPrime, long secondPrime)
+{
+   if ((firstPrime <= 0 || firstPrime > MAX_PQ) &&
+      (secondPrime <= 0 || secondPrime > MAX_PQ))
+      return false;
+   if (!EncryptionSupport::isPrime(firstPrime) ||
+      !EncryptionSupport::isPrime(secondPrime))
+      return false;
+   this->firstPrime = firstPrime;
+   this->secondPrime = secondPrime;
+   computeBothEncrKeys();
+   return true;
+}
+
+//encrypt the information
+bool Communicator::computeBothEncrKeys()
+{
+   /*
+   if (!setPrime(firstPrime, secondPrime))
+      return false; */
+      
+   long randomPrime;
+   n = firstPrime*secondPrime;
+   phi = (firstPrime - 1) * (secondPrime - 1);
+   do
+   {
+      randomPrime = EncryptionSupport::getSmallRandomPrime();
+   } 
+   while ((randomPrime > phi) && randomPrime % phi == 0);
+   e = randomPrime;
+   d = EncryptionSupport::inverseModN(e, n);
+   publicKey = IntPair(e, n);
+   privateKey = IntPair(d, n);
+   return true;
+}
+
+//format the string
+string Communicator::toString()
+{
+   string resultStirng;
+   ostringstream cnvrt_first, cnvrt_second, cnvrt_n, cnvrt_phi,
+      cnvrt_e, cnvrt_d;
+
+   cnvrt_first << firstPrime;
+   cnvrt_second << secondPrime;
+   cnvrt_n << n;
+   cnvrt_phi << phi;
+   cnvrt_e << e;
+   cnvrt_d << d;
+
+   resultStirng = InternetUser::toString() + "\n" + "(p,q) n, phi, e, d: (" +
+      cnvrt_first.str() + "," + cnvrt_second.str() + ") " + cnvrt_n.str() +
+      ", " + cnvrt_phi.str() + ", " + cnvrt_e.str() + "," + cnvrt_d.str() +
+      "\nPublic key" + publicKey.toString() + "\nPrivate key" + 
+      privateKey.toString() + "\n";
+   return resultStirng;
+}
+
+/*--------------------------output-------------------------------------
+Test with bad value:
+Name: undefined name
+IP Address: 0.0.0.0
+
+Correct value:
+Name: dns
+IP Address: 75.75.75.75
+
+After changing the value:
+Name: bad
+IP Address: 23.40.84.104
+
+Test for accessor:
+23.40.84.104
+dns
+
+Test for mutator:
+valid name
+invalid ip
+
+--------------test for communicator-----------------
+
+Test1 is:
+Name: undefined name
+IP Address: 0.0.0.0
+
+(p,q) n, phi, e, d: (0,0) 0, 0, 0,0
+Public key(0, 0)
+Private key(0, 0)
+
+Test2 is:
+Name: Hanzhuo
+IP Address: 231.40.32.80
+
+(p,q) n, phi, e, d: (0,0) 0, 0, 0,0
+Public key(0, 0)
+Private key(0, 0)
+
+Test3 is:
+Name: undefined name
+IP Address: 0.0.0.0
+
+(p,q) n, phi, e, d: (809,821) 664189, 662560, 31,235680
+Public key(31, 664189)
+Private key(235680, 664189)
+
+Test4 is:
+Name: Hanzhuo
+IP Address: 210.89.10.90
+
+(p,q) n, phi, e, d: (907,1087) 985909, 983916, 101,595450
+Public key(101, 985909)
+Private key(595450, 985909)
+
+Test5 is:
+Name: undefined name
+IP Address: 0.0.0.0
+
+(p,q) n, phi, e, d: (0,0) 0, 0, 0,0
+Public key(0, 0)
+Private key(0, 0)
+
+After changing the value:
+Name: Foothill
+IP Address: 19.30.104.203
+
+(p,q) n, phi, e, d: (601,613) 368413, 367200, 307,141605
+Public key(307, 368413)
+Private key(141605, 368413)
+Press any key to continue . . .
+*/
