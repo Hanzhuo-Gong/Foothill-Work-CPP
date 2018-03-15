@@ -1,0 +1,249 @@
+#include <iostream>
+#include <string>
+#include <cmath>
+#include <sstream>
+using namespace std;
+
+//----------------Complex class prototype----------------------
+class Complex
+{
+private:
+   double real;
+   double imag;
+
+public:
+   static const double DEFAULT_NUM;
+   static const double ZERO_DIVISION;
+
+   Complex();
+   Complex(double real);
+   Complex(double real, double imag);
+   bool setReal(double real);
+   bool setImag(double imag);
+   double getReal() const { return real; }
+   double getImag() const { return imag; }
+   double modulus() const;
+   string toString();
+
+   Complex reciprocal() const;
+   //friend class operator
+   friend const Complex operator+(const Complex& c1, const Complex& c2);
+   friend const Complex operator-(const Complex& c1, const Complex& c2);
+   friend const Complex operator*(const Complex& c1, const Complex& c2);
+   friend const Complex operator/(const Complex& c1, const Complex& c2);
+   friend ostream& operator<<(ostream& str, const Complex& c);
+   Complex operator=(const Complex& c2);
+   friend bool operator<(const Complex& c1, const Complex& c2);
+   friend bool operator==(const Complex& c1, const Complex& c2);
+   //exception
+   class DivByZeroException {};
+};
+
+const double Complex::DEFAULT_NUM = 0;
+const double POWER = 2;
+const double Complex::ZERO_DIVISION = .00000001;
+
+//--------------------------Complex class definition------------------
+//constructor
+Complex::Complex()
+{
+   this->real = DEFAULT_NUM;
+   this->imag = DEFAULT_NUM;
+}
+
+Complex::Complex(double real)
+{
+   setReal(real);
+   this->imag = DEFAULT_NUM;
+}
+
+Complex::Complex(double real, double imag)
+{
+   setReal(real);
+   setImag(imag);
+}
+
+//mutator
+bool Complex::setReal(double real)
+{
+   this->real = real;
+   return true;
+}
+
+bool Complex::setImag(double imag)
+{
+   this->imag = imag;
+   return true;
+}
+
+//calculate the modulus for a pair
+double Complex::modulus() const
+{
+   double modulusC;
+   modulusC = sqrt((pow(real, POWER) + pow(imag, POWER)));
+   return modulusC;
+}
+
+string Complex::toString()
+{
+   string result;
+   ostringstream cnvrtReal, cnvrtImag;
+
+   cnvrtReal << real;
+   cnvrtImag << imag;
+   result = "(" + cnvrtReal.str() + ", " + cnvrtImag.str() + ")";
+   return result;
+}
+
+Complex Complex::reciprocal() const
+{
+   Complex temp;
+
+   if (modulus() < ZERO_DIVISION)
+      throw DivByZeroException();
+   temp.real = (real / ((real*real) + (imag*imag)));
+   temp.imag = (-imag / ((real*real) + (imag*imag)));
+   return temp;
+}
+
+//plus operator
+const Complex operator+(const Complex& c1, const Complex& c2)
+{
+   Complex temp;
+
+   temp.real = c1.real + c2.real;
+   temp.imag = c1.imag + c2.imag;
+   return temp;
+}
+
+//minus operator
+const Complex operator-(const Complex& c1, const Complex& c2)
+{
+   Complex temp;
+
+int main()
+{
+   Complex c1(-4, 3), c2, c3(7), c4, c5(1, 2), c6(3, 4), c7, c8(5,3), 
+      c9(0.00000000001,0.000000000001), c10(6,0.1), c11(3,0),c12, c13(-4, 3);
+   cout << "Modulus value:" << endl;
+   cout << c1.modulus() << endl;
+   cout << c2.modulus() << endl;
+   cout << c3.modulus() << endl;
+   cout << "\nTest for display:\n" << c1 << endl;
+
+   //test for operator ==
+   cout << "\nTest for operator:" << endl;
+   if (c1 == c2)
+      cout << "two object are same" << endl;
+   else
+      cout << "two object are not the same" << endl;
+
+   if (c1 == c13)
+      cout << "two object are same" << endl;
+   else
+      cout << "two object are not the same" << endl;
+
+   //test for operator <
+   if (c1.modulus() == c13.modulus())
+      cout << "two modulus are equal" << endl;
+   else
+      cout << "two modulus are not equal" << endl;
+
+   if (c1.modulus() == c4.modulus())
+      cout << "two modulus are equal" << endl;
+   else
+      cout << "two modulus are not equal" << endl;
+
+   c2 = c1;
+   cout << "c2 is" << c2 << " c1 is" << c1 << endl;
+
+   try
+   {
+      c2 = c1;
+      cout << "\nc2 is:" << c2.toString() << endl;
+      c4 = c5 * c6;
+      cout << "c4 is:" << c4.toString() << endl;
+      c12 = c10 / c11;
+      cout << "c12 is:" << c12.toString() << endl;
+      c7 = c8 / c9;
+      cout << "c7 is:" << c7.toString() << endl;
+   }
+   catch(Complex::DivByZeroException)
+   {
+      cout << "Can not divide by 0 denominator" << endl;
+   }
+    return 0;
+}
+
+/*-----------------------output----------------------------
+Modulus value:
+5
+0
+7
+
+Test for display:
+(-4,3)
+
+Test for operator:
+two object are not the same
+two object are same
+two modulus are equal
+two modulus are not equal
+c2 is(-4,3) c1 is(-4,3)
+
+c2 is:(-4, 3)
+c4 is:(-5, 10)
+c12 is:(2, 0.0333333)
+Can not divide by 0 denominator
+Press any key to continue . . .
+*/   temp.real = c1.real - c2.real;
+   temp.imag = c1.imag - c2.imag;
+   return temp;
+}
+
+//multiple operator
+const Complex operator*(const Complex& c1, const Complex& c2)
+{
+   Complex temp;
+
+   temp.real = (c1.real * c2.real) - (c1.imag * c2.imag);
+   temp.imag = (c1.real * c2.imag) + (c2.real * c1.imag);
+   return temp;
+}
+
+//division operator
+const Complex operator/(const Complex& c1, const Complex& c2)
+{
+   Complex temp, result;
+
+   temp = c2.reciprocal();
+   result = operator*(c1, temp);
+   return result;
+}
+
+//string display
+ostream& operator<<(ostream& str, const Complex& c)
+{
+   str << '(' << c.real << ',' << c.imag <<')';
+   return str;
+}
+
+Complex Complex::operator=(const Complex& c2)
+{
+   this->real = c2.real;
+   this->imag = c2.imag;
+   return *this;
+}
+
+
+bool operator<(const Complex& c1, const Complex& c2)
+{
+   return (c1.modulus() == c2.modulus());
+}
+
+
+bool operator==(const Complex& c1, const Complex& c2)
+{
+   return (c1.real == c2.real && c1.imag == c2.imag);
+}
+
