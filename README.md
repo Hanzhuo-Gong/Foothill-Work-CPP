@@ -1,2 +1,2 @@
 # Foothill-Work-CPP
-All code were written in CPP code for different topic.
+All projects are from Foothill College and written in C++ 
