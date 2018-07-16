@@ -1,0 +1,4 @@
+﻿  CS2CLab8.cpp
+h:\study\source\repos\cs 2c lab8\cs 2c lab8\cs2clab8.cpp(88): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+h:\study\source\repos\cs 2c lab8\cs 2c lab8\cs2clab8.cpp(153): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+  CS 2C Lab8.vcxproj -> H:\Study\source\repos\CS 2C Lab8\Debug\CS 2C Lab8.exe
