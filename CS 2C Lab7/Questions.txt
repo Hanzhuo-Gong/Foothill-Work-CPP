@@ -1,0 +1,58 @@
+Question 2: 
+
+Sorted List: Insert will take a n^2 time, because It need to iterate the
+whole numNumber to do the insertion. I got some weired time in my computer,
+when I changed desktop to do the same test, the time is cut in half. Remove
+is constant, because we only remove the first minimum node from the list.
+When the size is double, the time is also double.
+
+Unsorted List: Will be the opposite of sorted list, insert takes constant time
+because we only insert the back of the list. Remove will take n^2 time, because
+we need to iterate the whole list to find the minimum since the list is unsorted.
+I got the time for unsorted list is 175.034 seconds, but for sorted list time for
+insert is 77.767 for size 40000. We see a big time difference in here. I believe
+because when sorted list doing insert, when it find the node greater than the node
+to insert. It can break the loop and do the next insertion. Which is average case.
+However, unsorted list remove need to find the minimum, we don't know where is the
+minimum, so we need to travel the whole list to find the minimum. Worst case.
+
+heap sort: insert will take n log n time, when we insert a node, It will compare with
+its parent and get to the right position. log n time for one, since we need to iterate
+the whole list, the time is n log n. Remove is the same log n, when we try to remove a
+node, it will search the child which have the minimum value and return it.
+
+Question 4:
+//-----------------------------In order-------------------------------
+Sorted List: 
+Insert I got the time 152.572 seconds. time should be n^2, because when we insert
+the number 2, we need to compare 1, insert 2. then we insert 3, we need to compare
+1, 2, then insert 3. If we want to insert 40000, we need to compare 1,2,3....39999.
+Which the worst case. Remove won't change, because the list is sorted, remove the first
+node, time is constant.
+
+Unsorted List:
+Insert shouldn't change, I got the time 0.023. constant, just push_back. Remove doesn't
+change too, because we don't know where the minimum, so we need to travel the whole list
+to get mimum, n^2 times. I got 174.646.
+
+Heap sorted:
+Nothing affect, I got the insert time 0.015, and remove time 0.083. But this is the best case
+for max heap sort tree, because we are insert the in order, so the large number will be always
+in the root, not many swtich will needed. n log n for both insert and remove.
+
+//---------------------------Reverse order-------------------------------
+Sorted List:
+insert is contants, this is best case for insert, when we insert 39999, we compare only 40000.
+39998, only compare 39999. When you insert 1, only compare 2, so we only compare one number when
+doing insertion. Remove no change, still the first number out, constant. I got 0.04 for insert,
+and 0.011 for remove
+
+Unsorted List:
+Nothing change, insert will still push_back, constant. Remove we still need to travel the whole list
+to find the minimum. n^2 times. I got 0.023 for insert, 174.468 for remove.
+
+heap sorted:
+Insertion I got the time longer than in order one, 0.061. Time still n log n, this is the worst
+case for max heap tree. because we are insert the number smaller than then one we inserted before,
+so the tree need to swap everytime we do the insertion. Remove, nothing change, 0.081 time, n log n
+time.
