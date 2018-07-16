@@ -1,0 +1,3 @@
+﻿  CS2CLab2.cpp
+MSVCRTD.lib(exe_main.obj) : error LNK2019: unresolved external symbol _main referenced in function "int __cdecl invoke_main(void)" (?invoke_main@@YAHXZ)
+H:\Study\source\repos\CS 2C Lab2\Debug\CS 2C Lab2.exe : fatal error LNK1120: 1 unresolved externals
